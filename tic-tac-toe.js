@@ -1,9 +1,9 @@
 function setupBoard(){
     window.addEventListener('DOMContentLoaded', function(){
         
-        var tiles = this.document.getElementById('board').getElementsByTagName('div');
+        let tiles = this.document.getElementById('board').getElementsByTagName('div');
 
-        //Add square tiles classes to each div containers
+        // Add square tiles classes to each div containers
         for(let i = 0; i<tiles.length; i++){
             tiles[i].classList.add('square');
             tiles[i].addEventListener('click', function(){
@@ -17,21 +17,26 @@ function setupBoard(){
             tiles[i].addEventListener('mouseleave', function(){
                 tiles[i].classList.remove('hover');
             })
-        }  
+        }
+        
+        // Add Eventlistener to new game button 
+        const newgame_button = document.getElementsByTagName('button');
+        newgame_button[0].addEventListener('click', function(){
+            reset(tiles);
+        });
 
     });
 }
 
 
-var curr_player = 1 // Keeps track of current player (1 or 2)
-var game_state = [0, 0, 0, 0, 0 ,0, 0, 0, 0];
+let curr_player = 1 // Keeps track of current player (1 or 2)
+let game_state = [0, 0, 0, 0, 0 ,0, 0, 0, 0]; // Value of 1 assigned when an X is clicked, -1 otherwise.
 
 function tileClick(tile, clickedTile){
     if (tile.textContent == "" && curr_player==1){ 
         tile.textContent = 'X'; 
         tile.classList.add('X');
         game_state[clickedTile] = 1; 
-        console.log('Tile clicked!: ', clickedTile);
         checkState(game_state, curr_player);
         curr_player=2;
     }
@@ -40,7 +45,6 @@ function tileClick(tile, clickedTile){
         tile.textContent = 'O';
         tile.classList.add('O');
         game_state[clickedTile] = -1;
-        console.log('Tile clicked!: ', clickedTile);
         checkState(game_state, curr_player);
         curr_player=1;
     }
@@ -48,6 +52,10 @@ function tileClick(tile, clickedTile){
     
 }
 
+/*
+Checks for a 'win' by summing each row, column, diagonal direction. If sum = 3 (3 X's in a row) - player 1 wins, 
+else if sum = -3 (3 O's in a row) - player 2 wins
+*/
 function checkState(state, player){
     //use a switch
     sum2win_p1 = 3; 
@@ -139,9 +147,36 @@ function checkState(state, player){
     
 }
 
-function Play(){
+
+function reset(tile_squares){   
+    // reset the status text
+    this.document.getElementById('status').textContent="Move your mouse over a square and click to play an X or an O.";
+    this.document.getElementById('status').classList.remove("you-won");
+
+    // reset the textContent of the tiles to ""
+    for(let i = 0; i<tile_squares.length; i++){
+            tile_squares[i].textContent = "";
+            tile_squares[i].classList.remove('X');
+            tile_squares[i].classList.remove('O');
+
+    }
+
+    // reset game__state 
+    game_state = [0,0,0,0,0,0,0,0,0]
+
+    // reset default player back to 1
+    curr_player=1;
+}
+
+
+
+
+
+
+
+function play(){
     setupBoard();
 }
 
 
-Play()
+play()
